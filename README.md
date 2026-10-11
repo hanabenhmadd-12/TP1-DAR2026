@@ -98,3 +98,73 @@ Le client saisit plusieurs entiers successivement. Après chaque saisie, il envo
 l'entier, reçoit le résultat (x * 5) et l'affiche. Quand l'utilisateur saisit **0**,
 la boucle s'arrête, le serveur répond 0 puis les deux côtés ferment leurs sockets
 proprement (`Process finished with exit code 0`).
+
+---
+
+# Activité 1-3 : Amélioration du service de calculatrice
+
+## Étape 1 : Connexion Client/Serveur avec l'adresse IP réelle
+
+![ipconfig](images/capture15.png)
+
+La commande `ipconfig` donne l'adresse IPv4 de la machine : **192.168.1.15**.
+
+![code serveur](images/capture16.png)
+
+Côté serveur, `InetAddress.getByName(...)` crée l'adresse IP, puis le `ServerSocket`
+est lié avec `bind(new InetSocketAddress(adresse, 1234))` : le serveur écoute sur
+l'IP réelle de la machine et sur le port 1234 (et non plus sur `localhost`).
+
+![code client](images/capture17.png)
+
+Côté client, `localhost` est remplacé par l'adresse IP du serveur, grâce à
+`InetAddress` et `InetSocketAddress` avec `socket.connect(...)`.
+
+![serveur en attente](images/capture18.png)
+
+Le serveur affiche qu'il attend sur `192.168.1.15:1234`.
+
+![client connecté](images/capture19.png)
+
+Le client se connecte au serveur en utilisant l'adresse IP réelle.
+
+![serveur connecté](images/capture20.png)
+
+Le serveur affiche l'adresse IP du client connecté.
+
+**Remarque** : ce test a été réalisé sur **une seule machine**, mais avec l'adresse IP
+réelle (192.168.1.15) à la place de `localhost`. Pour deux machines distinctes du même
+réseau local, il suffit de lancer `Client.java` sur la 2e machine avec l'IP du serveur
+(192.168.1.15), et d'autoriser le port 1234 dans le pare-feu Windows du serveur.
+
+## Étape 2 : Service de calculatrice amélioré
+
+![code client menu](images/capture21.png)
+
+Le client affiche un menu (1. Addition, 2. Soustraction, 3. Multiplication,
+4. Division, 0. Quitter), lit le choix puis les deux nombres, et les envoie au serveur
+   avec `writeInt()`.
+
+![code serveur menu](images/capture22.png)
+
+Le serveur lit le choix et les deux nombres, effectue le calcul avec un `switch`,
+puis renvoie le résultat avec `writeUTF()`. La division par zéro est détectée et
+renvoie un message d'erreur.
+
+### Tests
+
+![addition](images/capture23.png)
+
+**Addition** : 8 + 3 = 11.
+
+![soustraction](images/capture24.png)
+
+**Soustraction** : 8 - 3 = 5.
+
+![multiplication](images/capture25.png)
+
+**Multiplication** : 8 × 3 = 24.
+
+![division](images/capture26.png)
+
+**Division** : 8 / 2 = 4.0, et 8 / 0 renvoie « Erreur : division par zéro ».
