@@ -2,6 +2,8 @@
 
 **Hana Ben Hmad** – LSI3 – Développement d'applications réparties
 
+# Activité 1-1 : Première connexion Client/Serveur
+
 ## Étape 1 : Vérification de Git
 ![git version](images/capture1.png)
 
@@ -51,3 +53,48 @@ se terminent après la fermeture des sockets (`Process finished with exit code 0
 
 `127.0.0.1` est l'adresse de bouclage, équivalente à `localhost` : le résultat
 est identique, la connexion est établie.
+
+---
+
+# Activité 1-2 : Service de calculatrice
+
+## Étape 1 : Préparation de l'espace de travail
+Le projet `TP1-DAR2026` de l'Activité 1-1 est réutilisé et étendu : le client envoie
+un entier au serveur, qui le multiplie par 5 et renvoie le résultat.
+Les échanges utilisent `DataInputStream` et `DataOutputStream`.
+
+## Étape 2 : Service de multiplication
+
+### Code du serveur
+![code serveur](images/capture9.png)
+
+Le serveur attend un client, lit un entier avec `readInt()`, calcule `x * 5`,
+puis renvoie le résultat avec `writeInt()`.
+
+### Code du client
+![code client](images/capture10.png)
+
+Le client lit un entier au clavier (`Scanner`), l'envoie avec `writeInt()`,
+puis reçoit et affiche le résultat avec `readInt()`.
+
+### Tests avec différentes valeurs
+![test positif](images/capture11.png)
+
+**x = 7** : le client reçoit 35 (7 × 5).
+
+![test négatif](images/capture12.png)
+
+**x = -4** : le client reçoit -20. Les entiers négatifs sont bien transmis grâce à
+`DataInputStream` / `DataOutputStream`, qui envoient l'entier sur 4 octets.
+
+![test zéro](images/capture13.png)
+
+**x = 0** : le client reçoit 0 (0 × 5 = 0).
+
+### Version finale avec boucle
+![boucle client](images/capture14.png)
+
+Le client saisit plusieurs entiers successivement. Après chaque saisie, il envoie
+l'entier, reçoit le résultat (x * 5) et l'affiche. Quand l'utilisateur saisit **0**,
+la boucle s'arrête, le serveur répond 0 puis les deux côtés ferment leurs sockets
+proprement (`Process finished with exit code 0`).
