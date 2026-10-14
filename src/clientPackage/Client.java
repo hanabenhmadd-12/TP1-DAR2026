@@ -11,7 +11,7 @@ public class Client {
     public static void main(String[] args) {
         try {
             System.out.println("Je suis un client pas encore connecté…");
-            InetAddress adresseServeur = InetAddress.getByName("192.168.1.15");
+            InetAddress adresseServeur = InetAddress.getByName("192.168.56.1");
             Socket socket = new Socket();
             socket.connect(new InetSocketAddress(adresseServeur, 1234));
             System.out.println("je suis un client connecté à " + adresseServeur.getHostAddress());
